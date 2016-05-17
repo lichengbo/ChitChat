@@ -14,14 +14,26 @@ class IndexController extends Controller {
     function getCount() {
         $data = I('get.');
 //        S('user', null);
-        $user = S('user');
-        $user[$data['uid']] = $data;
-        S('user', $user);
+        if(!empty($data)) {
+            $user = S('user');
+            $user[$data['uid']] = $data;
+            S('user', $user);
+        }
+
+
         dump(S('user'));
     }
 
     function getUserInfo() {
         $userInfo = S('user');
         dump($userInfo);
+        S('user', null);
+    }
+
+    function getTime() {
+        $data['status'] = 'success';
+        $data['currentTime'] = time();
+
+        $this->ajaxReturn($data);
     }
 }
