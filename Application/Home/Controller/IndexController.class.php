@@ -32,7 +32,7 @@ class IndexController extends Controller {
 
     function getTime() {
         $data['status'] = 'success';
-        $data['currentTime'] = time();
+        $data['time'] = time();
 
         $this->ajaxReturn($data);
     }
