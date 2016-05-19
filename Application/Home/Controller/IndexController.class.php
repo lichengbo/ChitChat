@@ -49,6 +49,7 @@ class IndexController extends Controller {
                 $this->ajaxReturn($data);
             }
         } else {
+            $data = $userInfo;
             $data['status'] = "error";
             $data['info'] = "user info empty";
 
