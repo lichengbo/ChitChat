@@ -24,9 +24,11 @@ class IndexController extends Controller {
     }
 
     function login() {
-        $userInfo = I('request.');
-
+        $userInfo = file_get_contents('php://input');
         dump($userInfo);
+        /*$userInfo = I('request.');
+
+        dump($userInfo);*/
 
         // 用户信息校验
         /*if($userInfo['id'] == null) {
