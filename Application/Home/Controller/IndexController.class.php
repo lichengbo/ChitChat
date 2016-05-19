@@ -24,8 +24,7 @@ class IndexController extends Controller {
     }
 
     function login() {
-        $userInfo = file_get_contents('php://input');
-        json_decode($userInfo, true);
+        $userInfo = json_decode(file_get_contents('php://input'), true);
 
         // 用户信息校验
         /*if($userInfo['id'] == null) {
@@ -79,6 +78,11 @@ class IndexController extends Controller {
 
 
         dump(S('user'));
+    }
+    
+    function clearAllUser() {
+        S('user', null);
+        dump('clear user success');
     }
 
     function getUserInfo() {
