@@ -8,7 +8,57 @@ class IndexController extends Controller {
     }
 
     function test() {
-        echo 'test function';
+        $arr = array("a", "b", "c", "d");
+
+        dump($arr);
+
+        unset($arr[1]);
+        dump($arr);
+    }
+
+    function getToken() {
+
+        //id(long)、name(string)、sex(int，0代表保密，1代表男，2代表女)、tag(string)、
+        //location(double，格式为经度,纬度)、createTime(long)，以json方式传输，方法为post，
+        //要求返回true(成功)或false(失败)
+    }
+
+    function login() {
+        $userInfo = I('post.');
+
+        // 用户信息校验
+        /*if($userInfo['id'] == null) {
+            $data['status'] = "error";
+            $data['info'] = ""
+        }*/
+
+        if(!empty($userInfo)) {
+            $user = S('user');
+            $user[$userInfo['id']] = $userInfo;
+            $result = S('user', $user);
+
+            if($result) {
+                $data['status'] = "success";
+                $data['info'] = "login and save user info success";
+
+                $this->ajaxReturn($data);
+            } else {
+                $data['status'] = "error";
+                $data['info'] = "save user info error";
+
+                $this->ajaxReturn($data);
+            }
+        }
+    }
+
+    function logout() {
+
+    }
+
+
+    // 根据经纬度计算出附近的人，返回用户列表
+    function nearFirends() {
+
     }
 
     function getCount() {
@@ -27,7 +77,7 @@ class IndexController extends Controller {
     function getUserInfo() {
         $userInfo = S('user');
         dump($userInfo);
-        S('user', null);
+//        S('user', null);
     }
 
     function getTime() {
