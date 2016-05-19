@@ -25,10 +25,7 @@ class IndexController extends Controller {
 
     function login() {
         $userInfo = file_get_contents('php://input');
-        dump($userInfo);
-        /*$userInfo = I('request.');
-
-        dump($userInfo);*/
+        json_decode($userInfo, true);
 
         // 用户信息校验
         /*if($userInfo['id'] == null) {
@@ -36,7 +33,7 @@ class IndexController extends Controller {
             $data['info'] = ""
         }*/
 
-        /*if(!empty($userInfo)) {
+        if(!empty($userInfo)) {
             $user = S('user');
             $user[$userInfo['id']] = $userInfo;
             $result = S('user', $user);
@@ -58,7 +55,7 @@ class IndexController extends Controller {
             $data['info'] = "user info empty";
 
             $this->ajaxReturn($data);
-        }*/
+        }
     }
 
     function logout() {
