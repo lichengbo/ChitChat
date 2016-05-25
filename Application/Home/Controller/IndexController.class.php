@@ -118,8 +118,7 @@ class IndexController extends Controller {
 
             // 获取post 中的第几页的值，完成分页显示
 
-            $data['data'] = $nearFriendList;
-            $data['status'] = "success";
+            $data = $nearFriendList;
 
             $this->ajaxReturn($data);
         } else {
