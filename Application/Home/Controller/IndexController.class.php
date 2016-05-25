@@ -10,10 +10,24 @@ class IndexController extends Controller {
     function test() {
         $arr = array("a", "b", "c", "d");
 
-        dump($arr);
+        /*dump($arr);
 
         unset($arr[1]);
         dump($arr);
+
+        foreach ($arr as $item) {
+            if($item == "b") {
+                continue;
+            }
+
+            echo $item;
+        }*/
+
+        /*$age=array("Bill"=>"35","Steve"=>"37","Peter"=>"43");
+        dump($age);
+        sort($age);
+        dump($age);*/
+
     }
 
     function getToken() {
@@ -49,7 +63,6 @@ class IndexController extends Controller {
                 $this->ajaxReturn($data);
             }
         } else {
-            $data = $userInfo;
             $data['status'] = "error";
             $data['info'] = "user info empty";
 
@@ -58,13 +71,98 @@ class IndexController extends Controller {
     }
 
     function logout() {
+        $userInfo = json_decode(file_get_contents('php://input'), true);
+        $user = S('user');
+        unset($user[$userInfo['id']]);
+        $result = S('user', $user);
+
+        if($result) {
+            $data['status'] = "success";
+            $data['info'] = "user logout success";
+
+            $this->ajaxReturn($data);
+        } else {
+            $data['status'] = "error";
+            $data['info'] = "user logout error";
+
+            $this->ajaxReturn($data);
+        }
 
     }
 
 
     // 根据经纬度计算出附近的人，返回用户列表
-    function nearFirends() {
+    function getNearFirendsList() {
+        $userInfo = json_decode(file_get_contents('php://input'), true);
+        /*
+        // 测试数据
+        $userInfo = array(
+        "id" => "4bb24252eb86b433",
+        "name" => "张启",
+        "createTime" => 1464100749,
+        "latitude" => 31.77265982,
+        "longitude" => 117.19616868,
+        "sex" => 0);*/
+        if(!empty($userInfo)) {
+            $user = S('user');
 
+            // 删除自己的信息
+            unset($user[$userInfo['id']]);
+
+            foreach ($user as $key=>$item) {
+                $user[$key]['distance'] = $this->getDistance($userInfo['latitude'], $userInfo['longitude'], $item['latitude'], $item['longitude']);
+            }
+
+            sort($user); // 改变数组键值
+            $nearFriendList = $this->sortFirendList($user);
+
+            // 获取post 中的第几页的值，完成分页显示
+
+            $data['data'] = $nearFriendList;
+            $data['status'] = "success";
+
+            $this->ajaxReturn($data);
+        } else {
+            $data['status'] = "error";
+            $data['info'] = "user id empty, cannot get near firends list";
+
+            $this->ajaxReturn($data);
+        }
+    }
+
+    function getDistance($lat1, $lng1, $lat2, $lng2) {
+        $earthRadius = 6367000; //approximate radius of earth in meters
+
+        $lat1 = ($lat1 * pi() ) / 180;
+        $lng1 = ($lng1 * pi() ) / 180;
+
+        $lat2 = ($lat2 * pi() ) / 180;
+        $lng2 = ($lng2 * pi() ) / 180;
+
+        $calcLongitude = $lng2 - $lng1;
+        $calcLatitude = $lat2 - $lat1;
+        $stepOne = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
+        $stepTwo = 2 * asin(min(1, sqrt($stepOne)));
+        $calculatedDistance = $earthRadius * $stepTwo / 1000;
+
+        return round($calculatedDistance, 3);
+    }
+
+    function sortFirendList($arr) {
+        $len = count($arr);
+        for($i = 1; $i < $len; $i++) {
+            $tmp = $arr[$i];
+
+            for($j = $i - 1; $j >= 0; $j--) {
+                if($tmp['distance'] < $arr[$j]['distance']) {
+                    $arr[$j + 1] = $arr[$j];
+                    $arr[$j] = $tmp;
+                } else {
+                    break;
+                }
+            }
+        }
+        return $arr;
     }
 
     function getCount() {
