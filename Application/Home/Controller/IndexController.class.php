@@ -92,7 +92,7 @@ class IndexController extends Controller {
 
 
     // 根据经纬度计算出附近的人，返回用户列表
-    function getNearFirendsList() {
+    function getNearbyUsers() {
         $userInfo = json_decode(file_get_contents('php://input'), true);
         /*
         // 测试数据
