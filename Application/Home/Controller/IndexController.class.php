@@ -103,7 +103,7 @@ class IndexController extends Controller {
         "latitude" => 31.77265982,
         "longitude" => 117.19616868,
         "sex" => 0);*/
-        if(!empty($userInfo)) {
+        if(empty($userInfo)) {
             $user = S('user');
 
             // 删除自己的信息
