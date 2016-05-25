@@ -122,8 +122,9 @@ class IndexController extends Controller {
 
             $this->ajaxReturn($data);
         } else {
-            $data['status'] = "error";
-            $data['info'] = "user id empty, cannot get near firends list";
+//            $data['status'] = "error";
+//            $data['info'] = "user id empty, cannot get near firends list";
+            $data = array();
 
             $this->ajaxReturn($data);
         }
