@@ -188,9 +188,8 @@ class IndexController extends Controller {
         $userInfo['1']['avatar'] = -6543440;
         $userInfo['4bb24252eb86b433']['avatar'] = -1499549;
         $userInfo['e9e5ca62ad100409']['avatar'] = -769226;
-        unset($userInfo['4bb24252eb86b4334bb24252eb86b433']);
         dump($userInfo);
-//        S('user', null);
+        S('user', $userInfo);
     }
 
     function getTime() {
