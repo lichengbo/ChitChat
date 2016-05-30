@@ -31,10 +31,29 @@ class IndexController extends Controller {
     }
 
     function getToken() {
+        $userInfo = I('post.');
+        
+        if(empty($userInfo)) {
+            $data['status'] = "error";
+            $data['info'] = "get token error, user info empty";
 
-        //id(long)、name(string)、sex(int，0代表保密，1代表男，2代表女)、tag(string)、
-        //location(double，格式为经度,纬度)、createTime(long)，以json方式传输，方法为post，
-        //要求返回true(成功)或false(失败)
+            $this->ajaxReturn($data);
+        }
+
+        $p = new ServerController('0vnjpoadn9kkz','LNyNSj7HZs0Hj');
+        $r = json_decode($p->getToken($userInfo['id'],$userInfo['name'], $userInfo['avatar']));
+
+        if($r->code == 200) {
+            $data['status'] = "success";
+            $data['token'] = $r->token;
+            
+            $this->ajaxReturn($data);
+        } else {
+            $data['status'] = "error";
+            $data['info'] = "get token error";
+
+            $this->ajaxReturn($data);
+        }
     }
 
     function login() {
