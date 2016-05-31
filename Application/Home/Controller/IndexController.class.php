@@ -40,7 +40,8 @@ class IndexController extends Controller {
             $this->ajaxReturn($data);
         }
 
-        $p = new ServerController('0vnjpoadn9kkz','LNyNSj7HZs0Hj');
+//        $p = new ServerController('0vnjpoadn9kkz','LNyNSj7HZs0Hj');
+        $p = new ServerController('x18ywvqf873kc','YIqsj1MJDi9o4');
         $r = json_decode($p->getToken($userInfo['id'],$userInfo['name'], $userInfo['avatar']));
 
         if($r->code == 200) {
@@ -209,6 +210,22 @@ class IndexController extends Controller {
 //        $userInfo['e9e5ca62ad100409']['avatar'] = -769226;
         dump($userInfo);
 //        S('user', null);
+    }
+
+    function getUserById() {
+        $userInfo = I('post.');
+
+        if(empty($userInfo)) {
+            $data['status'] = "error";
+            $data['info'] = "get userinfo fail, user id empty";
+
+            $this->ajaxReturn($data);
+        }
+
+        $user = S('user');
+        $data = $user[$userInfo['id']];
+
+        $this->ajaxReturn($data);
     }
 
     function getTime() {
