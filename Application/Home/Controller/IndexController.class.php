@@ -37,12 +37,6 @@ class IndexController extends Controller {
     function login() {
         $userInfo = json_decode(file_get_contents('php://input'), true);
 
-        // 用户信息校验
-        /*if($userInfo['id'] == null) {
-            $data['status'] = "error";
-            $data['info'] = ""
-        }*/
-
         if(!empty($userInfo)) {
             $user = S('user');
             $user[$userInfo['id']] = $userInfo;
