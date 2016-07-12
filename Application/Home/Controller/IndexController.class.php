@@ -7,29 +7,6 @@ class IndexController extends Controller {
         $this->display();
     }
 
-    function test() {
-        $arr = array("a", "b", "c", "d");
-
-        /*dump($arr);
-
-        unset($arr[1]);
-        dump($arr);
-
-        foreach ($arr as $item) {
-            if($item == "b") {
-                continue;
-            }
-
-            echo $item;
-        }*/
-
-        /*$age=array("Bill"=>"35","Steve"=>"37","Peter"=>"43");
-        dump($age);
-        sort($age);
-        dump($age);*/
-
-    }
-
     function getToken() {
         $userInfo = I('post.');
         
@@ -91,7 +68,16 @@ class IndexController extends Controller {
     }
 
     function logout() {
-        $userInfo = json_decode(file_get_contents('php://input'), true);
+//        $userInfo = json_decode(file_get_contents('php://input'), true);
+        $userInfo = I('post.');
+
+        if(empty($userInfo)) {
+            $data['status'] = "error";
+            $data['info'] = "user logout error, user id empty";
+
+            $this->ajaxReturn($data);
+        }
+
         $user = S('user');
         unset($user[$userInfo['id']]);
         $result = S('user', $user);
@@ -107,22 +93,40 @@ class IndexController extends Controller {
 
             $this->ajaxReturn($data);
         }
-
     }
 
+    function update() {
+        $userInfo = json_decode(file_get_contents('php://input'), true);
+        // 判断是否有该用户，若没有返回错误信息
+        
+        if(!empty($userInfo)) {
+            $user = S('user');
+            $user[$userInfo['id']] = $userInfo;
+            $result = S('user', $user);
+
+            if($result) {
+                $data['status'] = "success";
+                $data['info'] = "update user info success";
+
+                $this->ajaxReturn($data);
+            } else {
+                $data['status'] = "error";
+                $data['info'] = "save user info error";
+
+                $this->ajaxReturn($data);
+            }
+        } else {
+            $data['status'] = "error";
+            $data['info'] = "user info empty";
+
+            $this->ajaxReturn($data);
+        }
+    }
 
     // 根据经纬度计算出附近的人，返回用户列表
     function getNearbyUsers() {
         $userInfo = I('post.');
-        /*
-        // 测试数据
-        $userInfo = array(
-        "id" => "4bb24252eb86b433",
-        "name" => "张启",
-        "createTime" => 1464100749,
-        "latitude" => 31.77265982,
-        "longitude" => 117.19616868,
-        "sex" => 0);*/
+
         if(!empty($userInfo)) {
             $user = S('user');
 
@@ -151,6 +155,7 @@ class IndexController extends Controller {
     }
 
     function getDistance($lat1, $lng1, $lat2, $lng2) {
+        //$lat1 = 31.775184; $lng1 = 117.196044; $lat2 = 31.77081145;$lng2 =  117.1951314;
         $earthRadius = 6367000; //approximate radius of earth in meters
 
         $lat1 = ($lat1 * pi() ) / 180;
@@ -163,9 +168,9 @@ class IndexController extends Controller {
         $calcLatitude = $lat2 - $lat1;
         $stepOne = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
         $stepTwo = 2 * asin(min(1, sqrt($stepOne)));
-        $calculatedDistance = $earthRadius * $stepTwo / 1000;
+        $calculatedDistance = $earthRadius * $stepTwo;
 
-        return round($calculatedDistance, 3);
+        return intval($calculatedDistance);
     }
 
     function sortFirendList($arr) {
@@ -224,6 +229,27 @@ class IndexController extends Controller {
 
         $user = S('user');
         $data = $user[$userInfo['id']];
+
+        $this->ajaxReturn($data);
+    }
+
+    function getUsersByIds() {
+//        $ids = I('post.');
+        $ids = json_decode(file_get_contents('php://input'), true);
+
+        if(empty($ids)) {
+            $data['status'] = "error";
+            $data['info'] = "get userinfo fail, user ids empty";
+
+            $this->ajaxReturn($data);
+        }
+
+        $user = S('user');
+
+        $data = array();
+        foreach ($ids as $item) {
+            array_push($data, $user[$item]);
+        }
 
         $this->ajaxReturn($data);
     }
