@@ -123,7 +123,7 @@ class IndexController extends Controller {
         }
     }
 
-    // 根据经纬度计算出附近的人，返回用户列表
+    // 根据经纬度信息计算出附近的人，返回用户列表
     function getNearbyUsers() {
         $userInfo = I('post.');
 
@@ -140,16 +140,10 @@ class IndexController extends Controller {
             sort($user); // 改变数组键值
             $nearFriendList = $this->sortFirendList($user);
 
-            // 获取post 中的第几页的值，完成分页显示
-
             $data = $nearFriendList;
-
             $this->ajaxReturn($data);
         } else {
-//            $data['status'] = "error";
-//            $data['info'] = "user id empty, cannot get near firends list";
             $data = array();
-
             $this->ajaxReturn($data);
         }
     }
@@ -192,13 +186,11 @@ class IndexController extends Controller {
 
     function getCount() {
         $data = I('get.');
-//        S('user', null);
         if(!empty($data)) {
             $user = S('user');
             $user[$data['uid']] = $data;
             S('user', $user);
         }
-
 
         dump(S('user'));
     }
@@ -208,13 +200,10 @@ class IndexController extends Controller {
         dump('clear user success');
     }
 
+//     获取全部用户信息（调试使用）
     function getUserInfo() {
         $userInfo = S('user');
-//        $userInfo['1']['avatar'] = -6543440;
-//        $userInfo['4bb24252eb86b433']['avatar'] = -1499549;
-//        $userInfo['e9e5ca62ad100409']['avatar'] = -769226;
         dump($userInfo);
-//        S('user', null);
     }
 
     function getUserById() {

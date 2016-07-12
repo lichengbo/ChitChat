@@ -6,10 +6,26 @@
 </head>
 <body>
     <h2>侃侃测试页面</h2>
-    <form action="index.php?c=index&a=login" method="post">
+    <form method="post">
         ID：<input type="text" name="id"><br>
         name：<input type="text" name="name"><br>
-        <input type="submit" value="submit">
+        <input type="button" value="submit">
     </form>
+
+    <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $("input[type=button]").click(function () {
+            $.ajax({
+                type: "post",
+                url: "index.php?c=index&a=getNearbyUsers",
+                data: {id: $("input[name=id]").val()},
+                type: "json",
+                success: function (res) {
+                    Console.log(res);
+                }
+            })
+        });
+
+    </script>
 </body>
 </html>
